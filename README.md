@@ -1,2 +1,4 @@
-# JAVA_PROGRAMING_Final_Project_Repository
-In this repository you can find the files for Plush's Final Project of a JAVA Programing class they took.
+# Final Project - Your Typical Randomly Generated Dungeon Crawler
+Within this repository you can find the files for Your Typical Randomly Generated Dungeon Crawler (YTRGDC), Plush's final project they made during a JAVA Programing course they took during the spring and early summer of 2026.
+YTRGDC is, as the name implies, a dungeon crawler where the floors you play on are randomly generated, with battles and shops around every unsuspecting corner.
+Just how low CAN you go?
