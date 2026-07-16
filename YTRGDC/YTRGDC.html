@@ -5,25 +5,25 @@
 	<link rel="stylesheet" href="Style/style.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
+<body onload="Game_Start()">
 	<div class="Page_Header">
 		<h1>Your Typical Randomly Generated Dungeon Crawler</h1>
 	</div>
 	
 	<div class="Game_Window">
 		<div class="Images">
-			<img src="Media/Background_Empty.png" width="1544" height="520" id="GameImage">
+			<img width="1544" height="525" id="GameImage">
 		</div>
 		<div class="Game_Text">
-			<h2>This bitch empty.</h1>
+			<h2 id="Narration">This bitch empty.</h1>
 		</div>
 		<div class="Player">
 			<h2>What will you do?</h2>
 			<div class="Buttons">
-				<button id="moveW">Move Up</button>
-				<button id="moveA">Move Left</button>
-				<button id="moveD">Move Right</button>
-				<button id="moveS">Move Down</button>
+				<button id="moveW" onclick="moveUp()">Move Up</button>
+				<button id="moveA" onclick="moveLeft()">Move Left</button>
+				<button id="moveD" onclick="moveRight()">Move Right</button>
+				<button id="moveS" onclick="moveDown()">Move Down</button>
 				<button id="mapcheck" onclick="Show_Map()">Check Map</button>
 				<button id="engage">Engage</button>
 				<button id="fight" class="Battle_Attack">Attack</button>
@@ -39,6 +39,6 @@
 		<span class="close">&times;</span>
 		<p id="Modal_Text" style="text-align: center"></p>
 	</div>
-</body> 
+</body>
 <script src="JavaScript/javascript.js"></script>
 </html>
