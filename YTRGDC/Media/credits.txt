@@ -1,2 +1,8 @@
 Brick_Wall - RPG Maker VX Ace default assets
 Background_Empty - https://www.vecteezy.com/photo/56122966-dark-dungeon-stone-brick-wall
+
+Background_Assassin - https://www.vecteezy.com/photo/56122966-dark-dungeon-stone-brick-wall + RPG Maker VX Ace default assets
+Background_Bandit - https://www.vecteezy.com/photo/56122966-dark-dungeon-stone-brick-wall + RPG Maker VX Ace default assets
+Background_Bat - https://www.vecteezy.com/photo/56122966-dark-dungeon-stone-brick-wall + RPG Maker VX Ace default assets
+Background_Skeleton - https://www.vecteezy.com/photo/56122966-dark-dungeon-stone-brick-wall + RPG Maker VX Ace default assets
+Background_Werewolf - https://www.vecteezy.com/photo/56122966-dark-dungeon-stone-brick-wall + RPG Maker VX Ace default assets
