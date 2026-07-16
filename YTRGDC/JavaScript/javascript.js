@@ -1,30 +1,91 @@
-let x = 1; let y = 1; let player_x = 0; let player_y = 0;
-const map = Array.from({ length: 99 }, () => Array(99).fill("   "));
-let text = "";
+//global variables used troughout the game
+let x = 1; let y = 1; let player_x = 0; let player_y = 0; let shop_x = 0; let shop_y = 0; let exit_x = 0; let exit_y = 0; //Axes for max map location, player, map and stairs location
+const map = Array.from({ length: 99 }, () => Array(99).fill(" ")); //map array
+let text = ""; //map check message
+let incombat = 0; //boolean to keep track of combat: 0 = no, 1 = yes
+let player_gold = 0; let player_items = 0; //track of player gold and items
+let floors = 0; //current floor number
 
+//global variables to keep track of elements
+var GameImage = document.getElementById("GameImage"); //images
+var Narration = document.getElementById('Narration'); //text
+var moveW = document.getElementById('moveW'); //Button - Move Up
+var moveA = document.getElementById('moveA'); //Button - Move Left
+var moveD = document.getElementById('moveD'); //Button - Move Right
+var moveS = document.getElementById('moveS'); //Button - Move Down
+var mapcheck = document.getElementById("mapcheck"); //Button - Check Map
+var engage = document.getElementById('engage'); //Button - Fight
+var fight = document.getElementById('fight'); //Button - Attack
+var guard = document.getElementById('guard'); //Button - Guard
+var item = document.getElementById('item'); //Button - Item
+var run = document.getElementById('run'); //Button - Flee
+
+//game start
+function Game_Start(){
+	Create_Map();
+    GameImage.src = "Media/Background_Empty.png";
+    Narration.innerHTML = "You awake with no memory of how you got here. All you have is an ever-shifting map to guide you to an exit that may never lead you out of this dungeon.";
+	engage.style.display = "none";
+	fight.style.display = "none";
+	guard.style.display = "none";
+	item.style.display = "none";
+	run.style.display = "none";
+}
+
+//map related functions
+
+//Randomly create the map
 function Create_Map() {
-  x = Math.floor(Math.random() * 16);
-  y = Math.floor(Math.random() * 16);
-  if(x == 0){
-	x = 1;
-  }
-  if(y == 0){
-	y = 1;
-  }
+  x = Math.floor(Math.random() * 10) + 1;
+  y = Math.floor(Math.random() * 10) + 1;
   for(let i = 0; i <= x; i++){
 	for(let o = 0; o <= y; o++){
 		map[i][o] = " ";
 	}
   }
-  map[0][0] = "X";
   player_x = 0;
   player_y = 0;
+  exit_x = Math.floor(Math.random() * x);
+  exit_y = Math.floor(Math.random() * y);
+  if(exit_x == player_x){
+  	exit_x += 1;
+	if(exit_x > x){
+		exit_x -= 1;
+	}
+  }
+  if(exit_y == player_y){
+  	exit_y += 1;
+  }
+  shop_x = Math.floor(Math.random() * x);
+  shop_y = Math.floor(Math.random() * y);
+  if(shop_x == player_x){
+  	shop_x += 1;
+	if(shop_x > x){
+		shop_x -= 1;
+	}
+  }
+  if(shop_y == player_y){
+  	shop_y += 1;
+  }
+  if(shop_x == exit_x){
+  	shop_x += 1;
+	if(shop_x > x){
+		shop_x -= 1;
+	}
+  }
+  if(shop_y == exit_y){
+  	shop_y += 1;
+  }
+  floors += 1;
 }
 
-Create_Map();
-
+//Visualise the map (for the map check funtion)
 function Draw_Map(){
-	map[player_x][player_y] = "z";
+	text = "";
+	map[player_x][player_y] = "X";
+    map[shop_x][shop_y] = "S";
+    map[exit_x][exit_y] = "E";
+	text += "Floor " + floors + "<br>";
 	text += "<br>-----------------------------------------<br>";
     for (let i = 0; i <= y; i++) //Y
 	{
@@ -39,25 +100,23 @@ function Draw_Map(){
 		
 		if (i <= y) text += "-----------------------------------------<br>";
 	}
-    
 }
 
+//Create a small window to show the map 
 function Show_Map(){
-	text = "";
     Draw_Map();
     document.getElementById("Modal_Text").innerHTML = text;
-    
+	
     // Get the modal
 	var modal = document.getElementById("myModal");
 
 	// Get the button that opens the modal
-	var btn = document.getElementById("myBtn");
 
 	// Get the <span> element that closes the modal
 	var span = document.getElementsByClassName("close")[0];
-
+    
 	// When the user clicks the button, open the modal 
-	btn.onclick = function() {
+	mapcheck.onclick = function() {
 	  modal.style.display = "block";
 	}
 
@@ -72,4 +131,66 @@ function Show_Map(){
 		modal.style.display = "none";
 	  }
 	}  
+}
+
+//movement related functions
+
+//The actual movement function
+function movement(direction){
+	if(direction == "w"){
+		map[player_x][player_y] = " ";
+		player_y -= 1;
+		map[player_x][player_y] = "X";
+	}
+	if(direction == "s"){
+		map[player_x][player_y] = " ";
+		player_y += 1;
+		map[player_x][player_y] = "X";
+	}
+	if(direction == "d"){
+		map[player_x][player_y] = " ";
+		player_x -= 1;
+		map[player_x][player_y] = "X";
+	}
+	if(direction == "a"){
+		map[player_x][player_y] = " ";
+		player_x += 1;
+		map[player_x][player_y] = "X";
+	}
+}
+
+//Up
+function moveUp(){
+	if(player_y == 0){
+		Narration.innerHTML = "A wall stands before you. You can't go that way.";
+	}else{
+		movement("w");
+	}
+}
+
+//Down
+function moveDown(){
+	if(player_y == y){
+		Narration.innerHTML = "A wall stands before you. You can't go that way.";
+	}else{
+		movement("s");
+	}
+}
+
+//Left
+function moveLeft(){
+	if(player_x == 0){
+		Narration.innerHTML = "A wall stands before you. You can't go that way.";
+	}else{
+		movement("d");
+	}
+}
+
+//Right
+function moveRight(){
+	if(player_x == x){
+		Narration.innerHTML = "A wall stands before you. You can't go that way.";
+	}else{
+		movement("d");
+	}
 }
