@@ -1,6 +1,6 @@
 //global variables used troughout the game
 let x = 1; let y = 1; let player_x = 0; let player_y = 0; let shop_x = 0; let shop_y = 0; let exit_x = 0; let exit_y = 0; //Axes for max map location, player, map and stairs location
-const map = Array.from({ length: 99 }, () => Array(99).fill("_")); //map array
+const map = Array.from({ length: 10 }, () => Array(10).fill("_")); //map array
 let text = ""; //map check message
 let incombat = 0; //boolean to keep track of combat: 0 = no, 1 = yes
 let player_gold = 0; let player_items = 0; //track of player gold and items
@@ -37,47 +37,44 @@ function Game_Start(){
 
 //Randomly create the map
 function Create_Map() {
-  x = Math.floor(Math.random() * 10) + 1;
-  y = Math.floor(Math.random() * 10) + 1;
-  for(let i = 0; i <= x; i++){
-	for(let o = 0; o <= y; o++){
-		map[i][o] = " ";
+	x = Math.floor(Math.random() * 10) + 1;
+	y = Math.floor(Math.random() * 10) + 1;
+	for(let i = 0; i <= y; i++){
+		for(let o = 0; o <= x; o++){
+			map[i][o] = " ";
+		}
 	}
-  }
-  player_x = 0;
-  player_y = 0;
-  exit_x = Math.floor(Math.random() * x);
-  exit_y = Math.floor(Math.random() * y);
-  if(exit_x == player_x){
-  	exit_x += 1;
-	if(exit_x > x){
-		exit_x -= 1;
+	player_x = 0;
+	player_y = 0;
+	exit_x = Math.floor(Math.random() * (x + 1));
+	exit_y = Math.floor(Math.random() * (y + 1));
+	if(exit_x == player_x){
+		exit_x += 1;
+		if(exit_x > x){
+			exit_x -= 1;
+		}
 	}
-  }
-  if(exit_y == player_y){
-  	exit_y += 1;
-  }
-  shop_x = Math.floor(Math.random() * x);
-  shop_y = Math.floor(Math.random() * y);
-  if(shop_x == player_x){
-  	shop_x += 1;
-	if(shop_x > x){
-		shop_x -= 1;
+	if(exit_y == player_y){
+		exit_y += 1;
+		if(exit_y > y){
+			exit_y -= 1;
+		}
 	}
-  }
-  if(shop_y == player_y){
-  	shop_y += 1;
-  }
-  if(shop_x == exit_x){
-  	shop_x += 1;
-	if(shop_x > x){
-		shop_x -= 1;
+	shop_x = Math.floor(Math.random() * (x + 1));
+	shop_y = Math.floor(Math.random() * (y + 1));
+	if(shop_x == player_x || shop_x == exit_x){
+		shop_x += 1;
+		if(shop_x > x){
+			shop_x -= 1;
+		}
 	}
-  }
-  if(shop_y == exit_y){
-  	shop_y += 1;
-  }
-  floors += 1;
+	if(shop_y == player_y || shop_y == exit_y){
+		shop_y += 1;
+		if(shop_y > y){
+			shop_y -= 1;
+		}
+	}
+	floors += 1;
 }
 
 //Visualise the map (for the map check funtion)
@@ -105,32 +102,25 @@ function Draw_Map(){
 
 //Create a small window to show the map 
 function Show_Map(){
-    Draw_Map();
-	
-    // Get the modal
+	Draw_Map();
+
 	var modal = document.getElementById("myModal");
-
-	// Get the button that opens the modal
-
-	// Get the <span> element that closes the modal
 	var span = document.getElementsByClassName("close")[0];
-    
+		
 	document.getElementById("Modal_Text").innerHTML = text;
-	// When the user clicks the button, open the modal 
+
 	mapcheck.onclick = function() {
-	  modal.style.display = "block";
+		modal.style.display = "block";
 	}
 
-	// When the user clicks on <span> (x), close the modal
 	span.onclick = function() {
-	  modal.style.display = "none";
+		modal.style.display = "none";
 	}
 
-	// When the user clicks anywhere outside of the modal, close it
 	window.onclick = function(event) {
-	  if (event.target == modal) {
-		modal.style.display = "none";
-	  }
+		if (event.target == modal) {
+			modal.style.display = "none";
+		}
 	}  
 }
 
@@ -148,12 +138,12 @@ function movement(direction){
 		player_y += 1;
 		map[player_x][player_y] = "X";
 	}
-	if(direction == "d"){
+	if(direction == "a"){
 		map[player_x][player_y] = "_";
 		player_x -= 1;
 		map[player_x][player_y] = "X";
 	}
-	if(direction == "a"){
+	if(direction == "d"){
 		map[player_x][player_y] = "_";
 		player_x += 1;
 		map[player_x][player_y] = "X";
@@ -189,7 +179,7 @@ function moveLeft(){
 	if(player_x == 0){
 		Narration.innerHTML = "A wall stands before you. You can't go that way.";
 	}else{
-		movement("d");
+		movement("a");
 	}
 }
 
