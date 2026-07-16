@@ -1,24 +1,25 @@
 //global variables used troughout the game
 let x = 1; let y = 1; let player_x = 0; let player_y = 0; let shop_x = 0; let shop_y = 0; let exit_x = 0; let exit_y = 0; //Axes for max map location, player, map and stairs location
-const map = Array.from({ length: 99 }, () => Array(99).fill(" ")); //map array
+const map = Array.from({ length: 99 }, () => Array(99).fill("_")); //map array
 let text = ""; //map check message
 let incombat = 0; //boolean to keep track of combat: 0 = no, 1 = yes
 let player_gold = 0; let player_items = 0; //track of player gold and items
 let floors = 0; //current floor number
+let rng_1 = 0; let rng_2= 0; let rng_3 = 0; //rng trackers
 
 //global variables to keep track of elements
 var GameImage = document.getElementById("GameImage"); //images
-var Narration = document.getElementById('Narration'); //text
-var moveW = document.getElementById('moveW'); //Button - Move Up
-var moveA = document.getElementById('moveA'); //Button - Move Left
-var moveD = document.getElementById('moveD'); //Button - Move Right
-var moveS = document.getElementById('moveS'); //Button - Move Down
+var Narration = document.getElementById("Narration"); //text
+var moveW = document.getElementById("moveW"); //Button - Move Up
+var moveA = document.getElementById("moveA"); //Button - Move Left
+var moveD = document.getElementById("moveD"); //Button - Move Right
+var moveS = document.getElementById("moveS"); //Button - Move Down
 var mapcheck = document.getElementById("mapcheck"); //Button - Check Map
-var engage = document.getElementById('engage'); //Button - Fight
-var fight = document.getElementById('fight'); //Button - Attack
-var guard = document.getElementById('guard'); //Button - Guard
-var item = document.getElementById('item'); //Button - Item
-var run = document.getElementById('run'); //Button - Flee
+var engage = document.getElementById("engage"); //Button - Fight
+var fight = document.getElementById("fight"); //Button - Attack
+var guard = document.getElementById("guard"); //Button - Guard
+var item = document.getElementById("item"); //Button - Item
+var run = document.getElementById("run"); //Button - Flee
 
 //game start
 function Game_Start(){
@@ -105,7 +106,6 @@ function Draw_Map(){
 //Create a small window to show the map 
 function Show_Map(){
     Draw_Map();
-    document.getElementById("Modal_Text").innerHTML = text;
 	
     // Get the modal
 	var modal = document.getElementById("myModal");
@@ -115,6 +115,7 @@ function Show_Map(){
 	// Get the <span> element that closes the modal
 	var span = document.getElementsByClassName("close")[0];
     
+	document.getElementById("Modal_Text").innerHTML = text;
 	// When the user clicks the button, open the modal 
 	mapcheck.onclick = function() {
 	  modal.style.display = "block";
@@ -138,24 +139,30 @@ function Show_Map(){
 //The actual movement function
 function movement(direction){
 	if(direction == "w"){
-		map[player_x][player_y] = " ";
+		map[player_x][player_y] = "_";
 		player_y -= 1;
 		map[player_x][player_y] = "X";
 	}
 	if(direction == "s"){
-		map[player_x][player_y] = " ";
+		map[player_x][player_y] = "_";
 		player_y += 1;
 		map[player_x][player_y] = "X";
 	}
 	if(direction == "d"){
-		map[player_x][player_y] = " ";
+		map[player_x][player_y] = "_";
 		player_x -= 1;
 		map[player_x][player_y] = "X";
 	}
 	if(direction == "a"){
-		map[player_x][player_y] = " ";
+		map[player_x][player_y] = "_";
 		player_x += 1;
 		map[player_x][player_y] = "X";
+	}
+	rng_1 = Math.floor(Math.random() * 10) + 1; //encounter
+	if(rng_1 == 10){
+		Narration.innerHTML = "Encounter time mother fucker!";
+	}else{
+		Narration.innerHTML = "As you walk through these halls, everything looks the same, you can barely tell where you are.";
 	}
 }
 
