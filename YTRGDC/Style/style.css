@@ -105,3 +105,9 @@ button{
   text-decoration: none;
   cursor: pointer;
 }
+
+.HP_UI {
+  display: grid;
+  grid-template-columns: auto auto;
+  margin-top: 12px;
+}
