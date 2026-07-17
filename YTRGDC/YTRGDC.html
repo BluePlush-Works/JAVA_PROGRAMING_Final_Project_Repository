@@ -12,29 +12,32 @@
 	
 	<div class="Game_Window">
 		<div class="Images">
-			<img width="1544" height="525" id="GameImage">
+			<img width="100%" height="100%" id="GameImage">
 		</div>
 		<div class="Game_Text">
 			<h2 id="Narration">This bitch empty.</h1>
 		</div>
 		<div class="Player">
+			<div class="HP_UI">
+				<div id="playerhp">Player HP: 10</div>
+				<div id="enemyhp" style="text-align: right">Enemy HP: 10</div>
+			</div>
 			<h2>What will you do?</h2>
 			<div class="Buttons">
 				<button id="moveW" onclick="moveUp()">Move Up</button>
 				<button id="moveA" onclick="moveLeft()">Move Left</button>
 				<button id="moveD" onclick="moveRight()">Move Right</button>
 				<button id="moveS" onclick="moveDown()">Move Down</button>
-				<button id="mapcheck" onclick="Show_Map()">Check Map</button>
-				<button id="engage">Engage</button>
+				<button id="mapcheck">Check Map</button>
 				<button id="fight" class="Battle_Attack">Attack</button>
 				<button id="guard" class="Battle_Guard">Defend</button>
 				<button id="item" class="Battle_Item">Use Item</button>
-				<button id="run">Flee</button>
+				<button id="run" onclick="flee()">Flee</button>
 			</div>
 		</div>
 	</div>
 	
-	<div id="myModal" class="modal">
+	<div id="map" class="modal">
 	<div class="modal-content">
 		<span class="close">&times;</span>
 		<p id="Modal_Text" style="text-align: center"></p>
