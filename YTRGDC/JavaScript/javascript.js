@@ -3,10 +3,10 @@ let x = 1; let y = 1; let player_x = 0; let player_y = 0; let shop_x = 0; let sh
 const map = Array.from({ length: 10 }, () => Array(10).fill(" ")); //map array
 let text = ""; //map check message
 let incombat = 0; //boolean to keep track of combat: 0 = no, 1 = yes
-let player_hp = 10; let player_gold = 0; let player_items = 0; //track of player's content
+let player_hp = 10; let player_gold = 0; let player_items = 0; let player_guard = 0; //player value trackers (guarding = 1, not guarding = 0)
 let floors = 0; //current floor number
 let rng_1 = 0; let rng_2= 0; let rng_3 = 0; //rng trackers
-let enemy_hp = 0; //enemy hp tracker
+let enemy_hp = 0; let enemy_name = ""; let enemy_charge = 0;//enemy value tracker
 
 //global variables to keep track of elements
 var GameImage = document.getElementById("GameImage"); //images
@@ -150,42 +150,40 @@ function movement(direction){
 				GameImage.src = "Media/Background_Assassin.png";
 				Narration.innerHTML = "An assassin blocks your path.";
 				enemy_hp = 10;
+				enemy_name = "Assassin";
 				break;
 			case 2: //Bandit
 				GameImage.src = "Media/Background_Bandit.png";
 				Narration.innerHTML = "A bandit blocks your path.";
+				enemy_name = "Bandit";
 				enemy_hp = 8;
 				break;
             case 3: //Bat
 				GameImage.src = "Media/Background_Bat.png";
 				Narration.innerHTML = "A bat blocks your path.";
+				enemy_name = "Bat";
 				enemy_hp = 5;
 				break;
             case 4: //Skeleton
 				GameImage.src = "Media/Background_Skeleton.png";
 				Narration.innerHTML = "A skeleton blocks your path.";
+				enemy_name = "Skeleton";
 				enemy_hp = 12;
 				break;
             case 5: //Werewolf
 				GameImage.src = "Media/Background_Werewolf.png";
 				Narration.innerHTML = "A werewolf blocks your path.";
+				enemy_name = "Werewolf";
 				enemy_hp = 15;
 				break;
 			case 6: //Zombie
 				GameImage.src = "Media/Background_Zombie.png";
 				Narration.innerHTML = "A zombie blocks your path.";
+				enemy_name = "Zombie";
 				enemy_hp = 10;
 				break;
 		}
-		moveW.style.display = "none";
-		moveA.style.display = "none";
-		moveS.style.display = "none";
-		moveD.style.display = "none";
-		mapcheck.style.display = "none";
-		fight.style.display = "block";
-		guard.style.display = "block";
-		item.style.display = "block";
-		run.style.display = "block";
+		battle_appear();
 		enemyHPtext.innerHTML = "Enemy HP: " + enemy_hp;
 	}else{ //encounter doesn't happen
 		if (player_x === exit_x && player_y === exit_y) {// next floor
@@ -238,22 +236,121 @@ function moveRight(){
 //battle related functions
 
 //fight button
-function fight(){
-	
+fight.onclick = function(){
+	rng_1 = Math.floor(Math.random() * 3) + 4; //base damage
+	rng_2 = Math.floor(Math.random() * 10); //crit chance
+	if(rng_2 == 9){
+		rng_1 = rng_1 * 2;
+		Narration.innerHTML = "CRITICAL HIT! You delt " + rng_1 + " damage to the " + enemy_name + ".";
+	}else{
+		Narration.innerHTML = "You delt " + rng_1 + " damage to the " + enemy_name + ".";
+	}
+	enemy_hp -= rng_1;
+	enemyHPtext.innerHTML = "Enemy HP: " + enemy_hp;
+	sleep(1000);
+	if(enemy_hp <= 0){
+		Narration.innerHTML = "You have defeated the " + enemy_name + "! Gained 3 gold and healed 3 hp.";
+		player_hp += 3;
+		player_gold += 3;
+		battle_disappear();
+		enemyHPtext.innerHTML = "";
+		playerHPtext.innerHTML = "Your HP: " + player_hp;
+		GameImage.src = "Media/Background_Empty.png";
+	}else{
+		enemy_turn();
+	}
 }
 
 //guard button
-function guard(){
-	
+guard.onclick = function(){
+	Narration.innerHTML = "You take a defensive stance. Incoming damage is halved!";
+	player_guard = 1;
+	enemy_turn();
 }
 
 //item button
-function item(){
-	
+item.onclick = function(){
+	if(player_items >= 1){
+		Narration.innerHTML = "You used an item and healed 5 HP.";
+		player_hp += 5;
+		player_items -= 1;
+		item.innerHTML = "Use Item (" + player_items + " left)";
+		playerHPtext.innerHTML = "Your HP: " + player_hp;
+	}else{
+		Narration.innerHTML = "You have no items to use.";
+	}
+	enemy_turn();
 }
 
 //flee button
 function flee(){
+	battle_disappear();
+	enemyHPtext.innerHTML = "";
+	Narration.innerHTML = "You safely ran away.";
+	GameImage.src = "Media/Background_Empty.png";
+}
+
+//enemy turn
+function enemy_turn(){
+	rng_1 = Math.floor(Math.random() * 2) + 1; //enemy move
+	if(enemy_charge == 1){ //prevent enemy from wasting a turn charging if they charged the turn prior
+		rng_1 = 1;
+	}
+	switch(rng_1){
+		case 1: //Attack
+			rng_2 = Math.floor(Math.random() * 3) + 4; //base damage
+			if(enemy_charge == 1){ //add charge damage to base damage
+				rng_2 += (rng_2 * 1.5);
+				enemy_charge = 0;
+			}
+			rng_3 = Math.floor(Math.random() * 10); //crit chance
+			if(rng_3 == 9){
+				rng_2 = rng_2 * 2;
+				if(player_guard == 1){ //player is guarding check
+					rng_2 -= (rng_2 / 2);
+					player_guard = 0;
+				}
+				Narration.innerHTML = "CRITICAL HIT! You took " + rng_2 + " damage.";
+			}else{
+				if(player_guard == 1){ //player is guarding check
+					rng_2 -= (rng_2 / 2);
+					player_guard = 0;
+				}
+				Narration.innerHTML = "You took " + rng_2 + " damage.";
+			}
+			player_hp -= rng_2;
+			playerHPtext.innerHTML = "Your HP: " + player_hp;
+			break;
+		case 2: //Charge
+			Narration.innerHTML = "The " + enemy_name + " took a moment to charge. Their next attack with deal double damage!";
+			enemy_charge = 1;
+			break;
+	}
+	if(player_hp <= 0){
+		fight.style.display = "none";
+		guard.style.display = "none";
+		item.style.display = "none";
+		run.style.display = "none";
+		Narration.innerHTML = "You have died... You made it to floor " + floors + ".";
+	}
+}
+
+//misc. functions
+
+//button layout to adapt to the situacion (entering/exiting battles)
+function battle_appear(){
+	moveW.style.display = "none";
+	moveA.style.display = "none";
+	moveS.style.display = "none";
+	moveD.style.display = "none";
+	mapcheck.style.display = "none";
+	fight.style.display = "block";
+	guard.style.display = "block";
+	item.style.display = "block";
+	run.style.display = "block";
+}
+
+function battle_disappear(){
 	moveW.style.display = "block";
 	moveA.style.display = "block";
 	moveS.style.display = "block";
@@ -263,7 +360,17 @@ function flee(){
 	guard.style.display = "none";
 	item.style.display = "none";
 	run.style.display = "none";
-	enemyHPtext.innerHTML = "";
-	Narration.innerHTML = "You safely ran away.";
-	GameImage.src = "Media/Background_Empty.png";
+}
+
+//wait function
+// Source - https://stackoverflow.com/a/1183886
+// Posted by Andrew Moore, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-07-20, License - CC BY-SA 2.5
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
 }
