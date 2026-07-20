@@ -22,6 +22,8 @@ var fight = document.getElementById("fight"); //Button - Attack
 var guard = document.getElementById("guard"); //Button - Guard
 var item = document.getElementById("item"); //Button - Item
 var run = document.getElementById("run"); //Button - Flee
+var buy = document.getElementById("buy"); //Button - Buy an item
+var leave = document.getElementById("leave"); //Button - Leave shop
 var modal = document.getElementById("map"); //small window where the map is showed
 var span = document.getElementsByClassName("close")[0]; //close button for the map window
 
@@ -56,6 +58,8 @@ function Game_Start(){
 	guard.style.display = "none";
 	item.style.display = "none";
 	run.style.display = "none";
+	buy.style.display = "none";
+	leave.style.display = "none";
 	player_gold = 0;
 	player_items = 3;
 	item.innerHTML = "Use Item (" + player_items + " left)";
@@ -191,6 +195,14 @@ function movement(direction){
 			Create_Map();
 		}else if (player_x === shop_x && player_y === shop_y) {// open shop
 			Narration.innerHTML = "You seem to have come across a shop. Rather than wonder how or why a shop would be here, you decide to browse it's wares.";
+			moveW.style.display = "none";
+			moveA.style.display = "none";
+			moveS.style.display = "none";
+			moveD.style.display = "none";
+			mapcheck.style.display = "none";
+			buy.style.display = "block";
+			leave.style.display = "block";
+			playerHPtext.innerHTML = "Gold: " + player_gold;
 		}else{
 			Narration.innerHTML = "As you walk through these halls, everything looks the same, you can barely tell where you are.";
 		}
@@ -247,7 +259,6 @@ fight.onclick = async function(){
 	}
 	enemy_hp -= rng_1;
 	enemyHPtext.innerHTML = "Enemy HP: " + enemy_hp;
-	await delay(2500);
 	if(enemy_hp <= 0){
 		Narration.innerHTML = "You have defeated the " + enemy_name + "! Gained 3 gold and healed 3 hp.";
 		player_hp += 3;
@@ -256,7 +267,9 @@ fight.onclick = async function(){
 		enemyHPtext.innerHTML = "";
 		playerHPtext.innerHTML = "Your HP: " + player_hp;
 		GameImage.src = "Media/Background_Empty.png";
+		enemy_charge = 0;
 	}else{
+		await delay(2500);
 		enemy_turn();
 	}
 }
@@ -300,7 +313,7 @@ async function enemy_turn(){
 	}
 	switch(rng_1){
 		case 1: //Attack
-			rng_2 = Math.floor(Math.random() * 3) + 4; //base damage
+			rng_2 = Math.floor(Math.random() * 3) + 2; //base damage
 			if(enemy_charge == 1){ //add charge damage to base damage
 				rng_2 = rng_2 * 2;
 				enemy_charge = 0;
@@ -338,6 +351,33 @@ async function enemy_turn(){
 	}
 }
 
+//shop functions
+
+//buy item
+function purchase(){
+	if(player_gold >= 4){
+		Narration.innerHTML = "You have made a successful purchase!";
+		player_gold -= 4;
+		player_items +=1;
+		playerHPtext.innerHTML = "Gold: " + player_gold;
+	}else{
+		Narration.innerHTML = "You do not have enough gold for this transaction.";
+	}
+}
+
+//leave shop
+function leave_shop(){
+	Narration.innerHTML = "Having finished your business at this shop, you packed up your things and set off on your path.";
+	moveW.style.display = "block";
+	moveA.style.display = "block";
+	moveS.style.display = "block";
+	moveD.style.display = "block";
+	mapcheck.style.display = "block";
+	buy.style.display = "none";
+	leave.style.display = "none";
+	playerHPtext.innerHTML = "Your HP: " + player_hp;
+}
+
 //misc. functions
 
 //button layout to adapt to the situacion (entering/exiting battles)
@@ -351,6 +391,7 @@ function battle_appear(){
 	guard.style.display = "block";
 	item.style.display = "block";
 	run.style.display = "block";
+	item.innerHTML = "Use Item (" + player_items + " left)";
 }
 
 function battle_disappear(){
