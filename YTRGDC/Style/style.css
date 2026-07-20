@@ -70,6 +70,10 @@ button{
 	background-color: green;
 }
 
+.Leave{
+	background-color: gray;
+}
+
 .modal {
   display: none; 
   position: fixed; 
