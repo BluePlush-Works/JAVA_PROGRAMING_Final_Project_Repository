@@ -236,7 +236,7 @@ function moveRight(){
 //battle related functions
 
 //fight button
-fight.onclick = function(){
+fight.onclick = async function(){
 	rng_1 = Math.floor(Math.random() * 3) + 4; //base damage
 	rng_2 = Math.floor(Math.random() * 10); //crit chance
 	if(rng_2 == 9){
@@ -247,7 +247,7 @@ fight.onclick = function(){
 	}
 	enemy_hp -= rng_1;
 	enemyHPtext.innerHTML = "Enemy HP: " + enemy_hp;
-	sleep(1000);
+	await delay(2500);
 	if(enemy_hp <= 0){
 		Narration.innerHTML = "You have defeated the " + enemy_name + "! Gained 3 gold and healed 3 hp.";
 		player_hp += 3;
@@ -262,14 +262,15 @@ fight.onclick = function(){
 }
 
 //guard button
-guard.onclick = function(){
+guard.onclick = async function(){
 	Narration.innerHTML = "You take a defensive stance. Incoming damage is halved!";
 	player_guard = 1;
+	await delay(2500);
 	enemy_turn();
 }
 
 //item button
-item.onclick = function(){
+item.onclick = async function(){
 	if(player_items >= 1){
 		Narration.innerHTML = "You used an item and healed 5 HP.";
 		player_hp += 5;
@@ -279,6 +280,7 @@ item.onclick = function(){
 	}else{
 		Narration.innerHTML = "You have no items to use.";
 	}
+	await delay(2500);
 	enemy_turn();
 }
 
@@ -291,7 +293,7 @@ function flee(){
 }
 
 //enemy turn
-function enemy_turn(){
+async function enemy_turn(){
 	rng_1 = Math.floor(Math.random() * 2) + 1; //enemy move
 	if(enemy_charge == 1){ //prevent enemy from wasting a turn charging if they charged the turn prior
 		rng_1 = 1;
@@ -300,7 +302,7 @@ function enemy_turn(){
 		case 1: //Attack
 			rng_2 = Math.floor(Math.random() * 3) + 4; //base damage
 			if(enemy_charge == 1){ //add charge damage to base damage
-				rng_2 += (rng_2 * 1.5);
+				rng_2 = rng_2 * 2;
 				enemy_charge = 0;
 			}
 			rng_3 = Math.floor(Math.random() * 10); //crit chance
@@ -326,6 +328,7 @@ function enemy_turn(){
 			enemy_charge = 1;
 			break;
 	}
+	await delay(1500);
 	if(player_hp <= 0){
 		fight.style.display = "none";
 		guard.style.display = "none";
@@ -363,14 +366,6 @@ function battle_disappear(){
 }
 
 //wait function
-// Source - https://stackoverflow.com/a/1183886
-// Posted by Andrew Moore, modified by community. See post 'Timeline' for change history
-// Retrieved 2026-07-20, License - CC BY-SA 2.5
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
