@@ -102,9 +102,9 @@ function Create_Map() {
 //Visualise the map (for the map check funtion)
 function Draw_Map(){
 	text = "";
-	map[player_y][player_x] = "X";
     map[shop_y][shop_x] = "S";
     map[exit_y][exit_x] = "E";
+	map[player_y][player_x] = "X";
 	text += "Floor " + floors + "<br>";
 	text += "<br>-----------------------------------------<br>";
     for (let i = 0; i <= y; i++) //Y
