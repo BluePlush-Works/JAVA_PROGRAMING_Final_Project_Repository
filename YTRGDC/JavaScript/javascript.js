@@ -203,6 +203,7 @@ function movement(direction){
 			buy.style.display = "block";
 			leave.style.display = "block";
 			playerHPtext.innerHTML = "Gold: " + player_gold;
+			GameImage.src = "Media/Background_Shop.png";
 		}else{
 			Narration.innerHTML = "As you walk through these halls, everything looks the same, you can barely tell where you are.";
 		}
@@ -376,6 +377,7 @@ function leave_shop(){
 	buy.style.display = "none";
 	leave.style.display = "none";
 	playerHPtext.innerHTML = "Your HP: " + player_hp;
+	GameImage.src = "Media/Background_Empty.png";
 }
 
 //misc. functions
