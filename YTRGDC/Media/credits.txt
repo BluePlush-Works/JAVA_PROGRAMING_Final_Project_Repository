@@ -8,3 +8,5 @@ Background_Skeleton - https://www.vecteezy.com/photo/56122966-dark-dungeon-stone
 Background_Werewolf - https://www.vecteezy.com/photo/56122966-dark-dungeon-stone-brick-wall + RPG Maker VX Ace default assets
 Background_Zombie - https://www.vecteezy.com/photo/56122966-dark-dungeon-stone-brick-wall + RPG Maker VX Ace default assets
 Background_Shop - https://www.vecteezy.com/photo/56122966-dark-dungeon-stone-brick-wall + The Legend Of Zelda: Majora's Mask 
+
+Icon - https://www.flaticon.com/free-icon/dungeon_2014191
